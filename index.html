@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>لوحة تحليل المبيعات</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+        <div>
+          <h1>لوحة تحليل المبيعات</h1>
+          <p class="sub" id="fileInfo">ارفع ملف CSV للبدء</p>
+        </div>
+      </div>
+      <div class="numerals" role="group" aria-label="شكل الأرقام">
+        <button type="button" class="seg active" data-numerals="latn" aria-pressed="true">123</button>
+        <button type="button" class="seg" data-numerals="arab" aria-pressed="false">١٢٣</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Upload -->
+    <section id="dropZone" class="drop" tabindex="0" aria-label="منطقة رفع الملف">
+      <svg class="drop-icon" viewBox="0 0 24 24" width="36" height="36" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <p class="drop-title">اسحب ملف CSV وأفلته هنا</p>
+      <p class="drop-hint">الأعمدة المطلوبة: التاريخ، المنتج، الفئة، الكمية، السعر<br><span dir="ltr">date, product, category, quantity, price</span></p>
+      <label class="btn btn-primary">
+        اختر ملفاً
+        <input type="file" id="fileInput" accept=".csv,text/csv" hidden>
+      </label>
+    </section>
+
+    <div id="alert" class="alert" role="alert" hidden></div>
+
+    <div id="dashboard" hidden>
+      <!-- Filters -->
+      <section class="filters" aria-label="الفلاتر">
+        <div class="field">
+          <label for="catFilter">الفئة</label>
+          <select id="catFilter"></select>
+        </div>
+        <div class="field">
+          <label for="fromDate">من تاريخ</label>
+          <input type="date" id="fromDate">
+        </div>
+        <div class="field">
+          <label for="toDate">إلى تاريخ</label>
+          <input type="date" id="toDate">
+        </div>
+        <button type="button" id="resetBtn" class="btn btn-ghost">إعادة تعيين</button>
+      </section>
+
+      <!-- KPIs -->
+      <section class="kpis" aria-label="المؤشرات الرئيسية">
+        <article class="kpi">
+          <span class="kpi-label">إجمالي المبيعات</span>
+          <span class="kpi-value" id="kpiTotal">—</span>
+          <span class="kpi-note">الكمية × السعر</span>
+        </article>
+        <article class="kpi">
+          <span class="kpi-label">عدد الطلبات</span>
+          <span class="kpi-value" id="kpiOrders">—</span>
+          <span class="kpi-note">عدد الصفوف</span>
+        </article>
+        <article class="kpi">
+          <span class="kpi-label">أفضل منتج</span>
+          <span class="kpi-value kpi-text" id="kpiTop">—</span>
+          <span class="kpi-note" id="kpiTopNote">حسب الإيراد</span>
+        </article>
+        <article class="kpi">
+          <span class="kpi-label">متوسط قيمة الطلب</span>
+          <span class="kpi-value" id="kpiAvg">—</span>
+          <span class="kpi-note">الإجمالي ÷ عدد الطلبات</span>
+        </article>
+      </section>
+
+      <!-- Charts -->
+      <section class="charts">
+        <article class="card">
+          <h2>المبيعات حسب الشهر</h2>
+          <div class="chart-box chart-bar"><canvas id="monthChart" aria-label="رسم أعمدة للمبيعات الشهرية" role="img"></canvas></div>
+        </article>
+        <article class="card">
+          <h2>المبيعات حسب الفئة</h2>
+          <div class="chart-box chart-donut"><canvas id="catChart" aria-label="رسم حلقي لتوزيع المبيعات على الفئات" role="img"></canvas></div>
+          <ul class="legend" id="catLegend"></ul>
+        </article>
+      </section>
+
+      <p class="empty" id="emptyMsg" hidden>لا توجد بيانات ضمن الفلاتر الحالية.</p>
+    </div>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
